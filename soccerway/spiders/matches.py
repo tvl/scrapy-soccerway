@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from soccerway.items import Match
-from urllib import urlencode
+from urllib.parse import urlencode
 
 class MatchesSpider(scrapy.Spider):
     name = "matches"
@@ -16,7 +16,9 @@ class MatchesSpider(scrapy.Spider):
     def start_requests(self):
         for i in range(2255155,2255155+5):
             self.params['id'] = str(i)
-            yield scrapy.Request(url=self.start_urls[0]+urlencode(self.params), callback=self.parse)
+            request = scrapy.Request(url=self.start_urls[0]+urlencode(self.params), callback=self.parse)
+            request.meta['proxy'] = 'http://127.0.0.1:8118'
+            yield request
 
     def parse(self, response):
         self.log('URL: {}'.format(response.url))

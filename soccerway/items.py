@@ -21,3 +21,11 @@ class Area(Item):
     name = Field()
     updated = Field()
 
+class Competition():
+    ID = Field()
+    name = Field()
+    area_id = Field()
+    area_name = Field()
+    updated = Field()
+
+

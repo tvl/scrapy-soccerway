@@ -16,7 +16,7 @@ class AreasSpider(Spider):
         "localization_id": "www"
     }
     def start_requests(self):
-        for i in range(1,213):
+        for i in range(1,213): # 1 - 212
             self.params['area_id'] = str(i)
             request = Request(url=self.start_urls[0]+urlencode(self.params), callback=self.parse)
             request.meta['proxy'] = 'http://127.0.0.1:8118'
@@ -26,7 +26,7 @@ class AreasSpider(Spider):
         l = ItemLoader(item=Area(), response=response)
         l.add_value('ID', parse_qs(response.xpath('//div[@class="clearfix subnav level-1"]//li//a[2]/@href').extract()[0])['area_id'][0])
         l.add_xpath('name', '//div[@class="clearfix subnav level-1"]//li//a[2]/text()')
-        l.add_value('updated', 'now') # you can also use literal values
+        l.add_value('updated', datetime.utcnow().isoformat()) # you can also use literal values
         return l.load_item()
         #self.log('URL: {}'.format(response.url))
 

@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-import scrapy
-from soccerway.items import Match
-from urllib.parse import urlencode
+from scrapy import Spider, Request
+from scrapy.loader import ItemLoader
+from soccerway.items import Area
+from urllib.parse import urlencode, urlparse, parse_qs
 
-class AreasSpider(scrapy.Spider):
+class AreasSpider(Spider):
     name = "areas"
     allowed_domains = ["http://www.soccerway.mobi"]
     start_urls = ['http://www.soccerway.mobi/?']
@@ -15,14 +16,19 @@ class AreasSpider(scrapy.Spider):
         "localization_id": "www"
     }
     def start_requests(self):
-        for i in range(8,11):
+        for i in range(1,213):
             self.params['area_id'] = str(i)
-            request = scrapy.Request(url=self.start_urls[0]+urlencode(self.params), callback=self.parse)
+            request = Request(url=self.start_urls[0]+urlencode(self.params), callback=self.parse)
             request.meta['proxy'] = 'http://127.0.0.1:8118'
             yield request
 
     def parse(self, response):
-        self.log('URL: {}'.format(response.url))
+        l = ItemLoader(item=Area(), response=response)
+        l.add_value('ID', parse_qs(response.xpath('//div[@class="clearfix subnav level-1"]//li//a[2]/@href').extract()[0])['area_id'][0])
+        l.add_xpath('name', '//div[@class="clearfix subnav level-1"]//li//a[2]/text()')
+        l.add_value('updated', 'now') # you can also use literal values
+        return l.load_item()
+        #self.log('URL: {}'.format(response.url))
 
     """
     def parse(self, response):

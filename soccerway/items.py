@@ -15,3 +15,9 @@ class SoccerwayItem(Item):
 class Match(Item):
     home = Field()
     away = Field()
+
+class Area(Item):
+    ID = Field()
+    name = Field()
+    updated = Field()
+

@@ -3,9 +3,10 @@ from scrapy import Spider, Request
 from scrapy.loader import ItemLoader
 from soccerway.items import Competition
 from urllib.parse import urlencode, urlparse, parse_qs
+from datetime import datetime
 
 class CompetitionsSpider(Spider):
-    name = "areas"
+    name = "competitions"
     allowed_domains = ["http://www.soccerway.mobi"]
     start_urls = 	['http://www.soccerway.mobi/?']
     params = {
@@ -34,9 +35,8 @@ class CompetitionsSpider(Spider):
             item['area_id'] = area_id
             item['area_name'] = area_name
             item['updated'] = datetime.utcnow().isoformat()
-            yield item
-
-        items.add(item)
+            #yield item
+            items.append(item)
         return items
         #self.log('URL: {}'.format(response.url))
 

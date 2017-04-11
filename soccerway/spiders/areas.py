@@ -3,6 +3,7 @@ from scrapy import Spider, Request
 from scrapy.loader import ItemLoader
 from soccerway.items import Area
 from urllib.parse import urlencode, urlparse, parse_qs
+from datetime import datetime
 
 class AreasSpider(Spider):
     name = "areas"
@@ -24,7 +25,7 @@ class AreasSpider(Spider):
 
     def parse(self, response):
         l = ItemLoader(item=Area(), response=response)
-        l.add_value('ID', parse_qs(response.xpath('//div[@class="clearfix subnav level-1"]//li//a[2]/@href').extract()[0])['area_id'][0])
+        l.add_value('id', parse_qs(response.xpath('//div[@class="clearfix subnav level-1"]//li//a[2]/@href').extract()[0])['area_id'][0])
         l.add_xpath('name', '//div[@class="clearfix subnav level-1"]//li//a[2]/text()')
         l.add_value('updated', datetime.utcnow().isoformat()) # you can also use literal values
         return l.load_item()

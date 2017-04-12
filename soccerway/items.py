@@ -12,6 +12,20 @@ class SoccerwayItem(Item):
     # name = scrapy.Field()
     pass
 
+class Venue(Item):
+    id = Field()
+    name = Field()
+    country = Field()
+    founded = Field()
+    address = Field()
+    zip = Field()
+    city = Field()
+    opened = Field()
+    capacity = Field()
+    surface = Field()
+    previous_names = Field()
+    facts = Field()
+
 class Team(Item):
     id = Field()
     name = Field()

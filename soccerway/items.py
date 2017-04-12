@@ -13,10 +13,19 @@ class SoccerwayItem(Item):
     pass
 
 class Match(Item):
-    home = Field()
-    away = Field()
+    id = Field()
+    datetime = Field()
+    area_id = Field()
+    area_name = Field()
+    competition_id = Field()
+    competition_name = Field()
+    home_team_id = Field()
+    home_team = Field()
+    away_team_id = Field()
+    away_team = Field()
+    kick_off = Field()
+    score = Field()
     updated = Field()
-
 
 class Area(Item):
     id = Field()

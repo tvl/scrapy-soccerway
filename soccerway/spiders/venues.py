@@ -17,7 +17,7 @@ class TeamsSpider(Spider):
         "localization_id": "www"
     }
     def start_requests(self):
-        start_url = '{}'
+        start_url = 'http://int.soccerway.com/venues/england/venue/v{}/'
         for i in range(6, 27618): # 27617 on 12.04.2017
             request = Request(url=start_url.format(str(i)), callback=self.parse)
             request.meta['proxy'] = 'http://127.0.0.1:8118'
@@ -25,19 +25,20 @@ class TeamsSpider(Spider):
 
     def parse(self, response):
         item = Venue()
-        item['id'] = parse_qs(response.xpath('//div[@class="clearfix subnav level-1"]//li//a[2]/@href').extract_first())['id'][0]
-        if not item['id']:
+        item['id'] = response.url.split('/')[-2][1:]
+        if not int(item['id']):
+            self.log('Skip URL: {}'.format(response.url))
             return None
-        item['name'] = response.xpath('//div[@class="clearfix subnav level-1"]//li//a[2]/text()').extract_first()
-        item['area_id'] = parse_qs(response.xpath('//div[@class="clearfix subnav level-1"]//a[1]/@href').extract()[1])['area_id'][0]
-        item['area_name'] = response.xpath('//div[@class="clearfix subnav level-1"]//a[1]/text()').extract()[1]
-        item['website'] = response.xpath('//p[@class="center website"]/a/@href').extract_first()
-        item['address'] = ", ".join(list(map(str.strip, response.xpath('//div[@class="clearfix"]/dl/dt[.="Address"]/following-sibling::dd[preceding-sibling::dt[1]/text()="Address"]/text()').extract())))
-        item['founded'] = response.xpath('//div[@class="clearfix"]/dl/dt[.="Founded"]/following-sibling::dd/text()').extract_first()
-        item['country'] = response.xpath('//div[@class="clearfix"]/dl/dt[.="Country"]/following-sibling::dd/text()').extract_first()
-        item['phone'] = response.xpath('//div[@class="clearfix"]/dl/dt[.="Phone"]/following-sibling::dd/text()').extract_first().strip()
-        item['fax'] = response.xpath('//div[@class="clearfix"]/dl/dt[.="Fax"]/following-sibling::dd/text()').extract_first().strip()
-        item['email'] = response.xpath('//div[@class="clearfix"]/dl/dt[.="E-mail"]/following-sibling::dd/a/text()').extract_first()
+        item['name'] = response.xpath('//h1/text()').extract_first()
+        item['address'] = response.xpath('//div[@class="clearfix"]/dl/dt[.="Address:"]/following-sibling::dd[preceding-sibling::dt[1]/text()="Address:"]/text()').extract_first()
+        item['zip'] = response.xpath('//div[@class="clearfix"]/dl/dt[.="Zip code:"]/following-sibling::dd[preceding-sibling::dt[1]/text()="Zip code:"]/text()').extract_first()
+        item['opened'] = response.xpath('//div[@class="clearfix"]/dl/dt[.="Opened:"]/following-sibling::dd[preceding-sibling::dt[1]/text()="Opened:"]/text()').extract_first()
+        item['capacity'] = response.xpath('//div[@class="clearfix"]/dl/dt[.="Capacity:"]/following-sibling::dd[preceding-sibling::dt[1]/text()="Capacity:"]/text()').extract_first()
+        item['surface'] = response.xpath('//div[@class="clearfix"]/dl/dt[.="Surface:"]/following-sibling::dd[preceding-sibling::dt[1]/text()="Surface:"]/text()').extract_first()
+        item['lat'] = response.xpath('//script[contains(., "setMarker")]').extract_first().split('\n')[10][:-1].strip()
+        item['lon'] = response.xpath('//script[contains(., "setMarker")]').extract_first().split('\n')[11][:-1].strip()
+        #item['url'] = response.url
+        item['updated'] = datetime.utcnow().isoformat(' ')
         yield item
         return item
         #self.log('URL: {}'.format(response.url))

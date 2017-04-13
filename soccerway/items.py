@@ -15,16 +15,17 @@ class SoccerwayItem(Item):
 class Venue(Item):
     id = Field()
     name = Field()
-    country = Field()
-    founded = Field()
+    #country = Field()
     address = Field()
     zip = Field()
     city = Field()
     opened = Field()
     capacity = Field()
     surface = Field()
-    previous_names = Field()
-    facts = Field()
+    #url = Field()
+    lat = Field()
+    lon = Field()
+    updated = Field()
 
 class Team(Item):
     id = Field()
@@ -38,6 +39,7 @@ class Team(Item):
     fax = Field()
     email = Field()
     website = Field()
+    updated = Field()
 
 class Match(Item):
     id = Field()

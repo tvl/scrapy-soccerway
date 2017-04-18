@@ -76,6 +76,32 @@ class MatchInfo(Item):
     updated = Field()
 
 
+class HistoricalData(Item):
+    id = Field()
+    timestamp = Field()
+    datetime = Field()
+    area_id = Field()
+    area = Field()
+    competition = Field()
+    competition_id = Field()
+    #home_team_id = Field()
+    home_team = Field()
+    #away_team_id = Field()
+    away_team = Field()
+    #ht_last5 = Field()
+    #at_last5 = Field()
+    game_week  = Field()
+    venue = Field()
+    kick_off = Field()
+    score = Field()
+    hts = Field()
+    fts = Field()
+    ets = Field()
+    pts = Field()
+    attendance = Field()
+    updated = Field()
+
+
 class Area(Item):
     id = Field()
     name = Field()

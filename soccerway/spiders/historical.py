@@ -19,6 +19,10 @@ class HistoricalSpider(Spider):
 
     def parse(self, response):
         item = HistoricalData()
+        links = response.xpath('//div[@class="clearfix subnav level-1"]//li//a/@href').extract()
+        if len(links) != 4:
+            self.log('SKIP URL: {}'.format(response.url))
+            return None
         item['id'] = parse_qs(response.xpath('//div[@class="clearfix subnav level-1"]//li//a/@href').extract()[3])['id'][0]
         item['area_id'] = parse_qs(response.xpath('//div[@class="clearfix subnav level-1"]//a[1]/@href').extract()[1])['area_id'][0]
         item['competition_id'] = parse_qs(response.xpath('//div[@class="clearfix subnav level-1"]//li//a[2]/@href').extract_first())['id'][0]
@@ -37,7 +41,12 @@ class HistoricalSpider(Spider):
         item['fts'] = response.xpath('//div[@class="details clearfix"]/dl/dt[.="Full-time"]/following-sibling::dd[preceding-sibling::dt[1]/text()="Full-time"]/text()').extract_first()
         item['ets'] = response.xpath('//div[@class="details clearfix"]/dl/dt[.="Extra-time"]/following-sibling::dd[preceding-sibling::dt[1]/text()="Extra-time"]/text()').extract_first()
         item['pts'] = response.xpath('//div[@class="details clearfix"]/dl/dt[.="Penalties"]/following-sibling::dd[preceding-sibling::dt[1]/text()="Penalties"]/text()').extract_first()
-        item['score'] = response.xpath('//h3[@class="thick scoretime "]/text()').extract_first().split('\n')[2].strip()
+        item['aggregate'] = response.xpath('//div[@class="details clearfix"]/dl/dt[.="On aggregate"]/following-sibling::dd[preceding-sibling::dt[1]/text()="On aggregate"]//a/text()').extract_first()
+        line = response.xpath('//h3[@class="thick scoretime "]/text()').extract()
+        if len(line) == 1:
+            item['score'] = line[0].split('\n')[2].strip()
+        if len(line) == 3:
+            item['score'] = line[1].strip()
         item['venue'] = response.xpath('//div[@class="details clearfix"]/dl/dt[.="Venue"]/following-sibling::dd[preceding-sibling::dt[1]/text()="Venue"]//a/text()').extract_first()
         item['attendance'] = response.xpath('//div[@class="details clearfix"]/dl/dt[.="Attendance"]/following-sibling::dd[preceding-sibling::dt[1]/text()="Attendance"]/text()').extract_first()
         item['updated'] = datetime.utcnow()

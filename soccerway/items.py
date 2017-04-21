@@ -98,6 +98,7 @@ class HistoricalData(Item):
     fts = Field()
     ets = Field()
     pts = Field()
+    aggregate = Field()
     attendance = Field()
     updated = Field()
 

@@ -1,0 +1,4 @@
+#/bin/sh
+cd ~/dev/scrapy-soccerway/soccerway
+scrapy crawl schedule -o data/schedule.csv --logfile schedule.log
+

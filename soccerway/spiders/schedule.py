@@ -4,6 +4,8 @@ from scrapy.loader import ItemLoader
 from soccerway.items import MatchInfo
 from urllib.parse import urlencode, urlparse, parse_qs
 from datetime import datetime, timezone
+from soccerway.competitions import competitions_id_list
+
 
 class ScheduleSpider(Spider):
     name = "schedule"
@@ -11,10 +13,18 @@ class ScheduleSpider(Spider):
     start_urls = ['http://www.soccerway.mobi/?']
 
     def start_requests(self):
+        """
         start_url = 'http://www.soccerway.mobi/'
         request = Request(url=start_url, callback=self.parse_index)
         request.meta['proxy'] = 'http://127.0.0.1:8118'
         yield request
+        """
+        start_url = 'http://www.soccerway.mobi/?sport=soccer&page=competition&id={}&localization_id=www'
+        for i in competitions_id_list:
+            request = Request(url=start_url.format(str(i)), callback=self.parse_competition)
+            request.meta['proxy'] = 'http://127.0.0.1:8118'
+            yield request
+
 
     def parse_index(self, response):
         start_url = 'http://www.soccerway.mobi/'

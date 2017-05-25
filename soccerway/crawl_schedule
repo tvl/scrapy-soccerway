@@ -1,5 +1,5 @@
 #/bin/sh
-cd ~/dev/scrapy-soccerway/soccerway
+cd /home/tvl/dev/scrapy-soccerway/soccerway
 scrapy crawl schedule -o data/schedule.csv --logfile schedule.log
-scp ~/dev/scrapy-soccerway/soccerway/schedule.csv tvl@sun.xopen.ru:/home/tvl/dev/swe/data/
+scp /home/tvl/dev/scrapy-soccerway/soccerway/data/schedule.csv tvl@sun.xopen.ru:/home/tvl/dev/swe/data/
 

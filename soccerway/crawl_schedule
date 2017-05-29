@@ -1,5 +1,8 @@
-#/bin/sh
+#/bin/bash
+echo "Crawl schedule"
+date
 cd /home/tvl/dev/scrapy-soccerway/soccerway
+rm data/schedule.csv
 scrapy crawl schedule -o data/schedule.csv --logfile schedule.log
 scp /home/tvl/dev/scrapy-soccerway/soccerway/data/schedule.csv tvl@sun.xopen.ru:/home/tvl/dev/swe/data/
 

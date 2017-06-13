@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from scrapy import Spider, Request
-from scrapy.loader import ItemLoader
 from soccerway.items import MatchInfo
-from urllib.parse import urlencode, urlparse, parse_qs
+from urllib.parse import parse_qs
 from datetime import datetime, timezone
-from soccerway.competitions import competitions_id_list
+#from soccerway.competitions import competitions_id_list
 
 
 class ScheduleSpider(Spider):
@@ -13,7 +12,7 @@ class ScheduleSpider(Spider):
     start_urls = ['http://www.soccerway.mobi/?']
 
     def start_requests(self):
-        """
+
         start_url = 'http://www.soccerway.mobi/'
         request = Request(url=start_url, callback=self.parse_index)
         request.meta['proxy'] = 'http://127.0.0.1:8118'
@@ -24,11 +23,11 @@ class ScheduleSpider(Spider):
             request = Request(url=start_url.format(str(i)), callback=self.parse_competition)
             request.meta['proxy'] = 'http://127.0.0.1:8118'
             yield request
-
+        """
 
     def parse_index(self, response):
         start_url = 'http://www.soccerway.mobi/'
-        links = response.xpath('//th[@class="competition-link"]//a/@href').extract()
+        links = response.xpath('//th[@colspan="5"]//a/@href').extract()
         for l in links:
             #self.log('URL: {}'.format(start_url+l))
             request = Request(url=start_url+l, callback=self.parse_competition)

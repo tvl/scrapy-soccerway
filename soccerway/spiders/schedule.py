@@ -2,21 +2,23 @@
 from scrapy import Spider, Request
 from soccerway.items import MatchInfo
 from urllib.parse import parse_qs
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone, timedelta
 #from soccerway.competitions import competitions_id_list
 
 
 class ScheduleSpider(Spider):
     name = "schedule"
     #allowed_domains = ["http://www.soccerway.mobi/"]
-    start_urls = ['http://www.soccerway.mobi/?']
+    tomorrow  = date.today()+timedelta(days=1)
+    start_urls = ['http://www.soccerway.mobi/?sport=soccer&page=home&localization_id=www',
+            'http://www.soccerway.mobi/?sport=soccer&page=matches&date={}&localization_id=www'.format(tomorrow.isoformat())]
 
     def start_requests(self):
-
-        start_url = 'http://www.soccerway.mobi/'
-        request = Request(url=start_url, callback=self.parse_index)
-        request.meta['proxy'] = 'http://127.0.0.1:8118'
-        yield request
+        start_url = 'http://www.soccerway.mobi/?sport=soccer&page=home&localization_id=www'
+        for u in self.start_urls:
+            request = Request(url=u, callback=self.parse_index)
+            request.meta['proxy'] = 'http://127.0.0.1:8118'
+            yield request
         """
         start_url = 'http://www.soccerway.mobi/?sport=soccer&page=competition&id={}&localization_id=www'
         for i in competitions_id_list:

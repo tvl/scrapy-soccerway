@@ -29,7 +29,7 @@ class ScheduleSpider(Spider):
 
     def parse_index(self, response):
         start_url = 'http://www.soccerway.mobi/'
-        links = response.xpath('//th[@colspan="5"]//a/@href').extract()
+        links = response.xpath('//th[@class="competition-link"]//a/@href').extract()
         for l in links:
             #self.log('URL: {}'.format(start_url+l))
             request = Request(url=start_url+l, callback=self.parse_competition)

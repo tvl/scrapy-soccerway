@@ -12,7 +12,7 @@ class HistoricalSpider(Spider):
 
     def start_requests(self):
         start_url = 'http://www.soccerway.mobi/?sport=soccer&page=match&id={}&_teamtype=default&localization_id=www'
-        for i in range(210000, 220000):
+        for i in range(280000, 290000):
             request = Request(url=start_url.format(str(i)), callback=self.parse)
             request.meta['proxy'] = 'http://127.0.0.1:8118'
             yield request

@@ -10,11 +10,11 @@ class ScheduleSpider(Spider):
     name = "schedule"
     #allowed_domains = ["http://www.soccerway.mobi/"]
     tomorrow  = date.today()+timedelta(days=1)
-    start_urls = ['http://www.soccerway.mobi/?sport=soccer&page=home&localization_id=www',
-            'http://www.soccerway.mobi/?sport=soccer&page=matches&date={}&localization_id=www'.format(tomorrow.isoformat())]
+    start_urls = ['http://www.soccerway.mobi/?sport=soccer&page=home&localization_id=www']
+            #'http://www.soccerway.mobi/?sport=soccer&page=matches&date={}&localization_id=www'.format(tomorrow.isoformat())]
 
     def start_requests(self):
-        start_url = 'http://www.soccerway.mobi/?sport=soccer&page=home&localization_id=www'
+        #start_url = 'http://www.soccerway.mobi/?sport=soccer&page=home&localization_id=www'
         for u in self.start_urls:
             request = Request(url=u, callback=self.parse_index)
             request.meta['proxy'] = 'http://127.0.0.1:8118'
@@ -35,6 +35,16 @@ class ScheduleSpider(Spider):
             request = Request(url=start_url+l, callback=self.parse_competition)
             request.meta['proxy'] = 'http://127.0.0.1:8118'
             yield request
+
+    def parse_round(self, response):
+        start_url = 'http://www.soccerway.mobi/'
+        links = response.xpath('//td[@class="score-time status"]//a/@href').extract()
+        for l in links:
+            #self.log('URL: {}'.format(start_url+l))
+            request = Request(url=start_url+l, callback=self.parse_match)
+            request.meta['proxy'] = 'http://127.0.0.1:8118'
+            yield request
+
 
     def parse_group(self, response):
         start_url = 'http://www.soccerway.mobi/'
@@ -59,6 +69,14 @@ class ScheduleSpider(Spider):
             request = Request(url=start_url+g, callback=self.parse_group)
             request.meta['proxy'] = 'http://127.0.0.1:8118'
             yield request
+        competition_id = int(parse_qs(response.xpath('//div[@class="clearfix subnav level-1"]//li//a[2]/@href').extract_first())['id'][0])
+        if competition_id in [308, 327, 366, 570]:
+            rounds = response.xpath('//select[@name="round_id"]/option/@value').extract()
+            for r in rounds:
+                request = Request(url=start_url+r, callback=self.parse_round)
+                request.meta['proxy'] = 'http://127.0.0.1:8118'
+                yield request
+
 
     def parse_match(self, response):
         item = MatchInfo()

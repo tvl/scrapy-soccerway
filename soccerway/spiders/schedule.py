@@ -34,12 +34,27 @@ class ScheduleSpider(Spider):
             request.meta['proxy'] = 'http://127.0.0.1:8118'
             yield request
 
+    def parse_group(self, response):
+        start_url = 'http://www.soccerway.mobi/'
+        links = response.xpath('//td[@class="score-time status"]//a/@href').extract()
+        for l in links:
+            #self.log('URL: {}'.format(start_url+l))
+            request = Request(url=start_url+l, callback=self.parse_match)
+            request.meta['proxy'] = 'http://127.0.0.1:8118'
+            yield request
+
+
     def parse_competition(self, response):
         start_url = 'http://www.soccerway.mobi/'
         links = response.xpath('//td[@class="score-time status"]//a/@href').extract()
         for l in links:
             #self.log('URL: {}'.format(start_url+l))
             request = Request(url=start_url+l, callback=self.parse_match)
+            request.meta['proxy'] = 'http://127.0.0.1:8118'
+            yield request
+        groups = response.xpath('//select[@name="group_id"]/option/@value').extract()
+        for g in groups:
+            request = Request(url=start_url+g, callback=self.parse_group)
             request.meta['proxy'] = 'http://127.0.0.1:8118'
             yield request
 

@@ -9,9 +9,12 @@ from datetime import date, datetime, timezone, timedelta
 class ScheduleSpider(Spider):
     name = "schedule"
     #allowed_domains = ["http://www.soccerway.mobi/"]
+    today  = date.today()
     tomorrow  = date.today()+timedelta(days=1)
-    start_urls = ['http://www.soccerway.mobi/?sport=soccer&page=home&localization_id=www']
-            #'http://www.soccerway.mobi/?sport=soccer&page=matches&date={}&localization_id=www'.format(tomorrow.isoformat())]
+    start_urls = [
+            #'http://www.soccerway.mobi/?sport=soccer&page=home&localization_id=www',
+            'http://www.soccerway.mobi/?sport=soccer&page=matches&date={}&localization_id=www'.format(today.isoformat()),
+            'http://www.soccerway.mobi/?sport=soccer&page=matches&date={}&localization_id=www'.format(tomorrow.isoformat())]
 
     def start_requests(self):
         #start_url = 'http://www.soccerway.mobi/?sport=soccer&page=home&localization_id=www'

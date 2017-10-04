@@ -28,7 +28,7 @@ USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML
 # See also autothrottle settings and docs
 #DOWNLOAD_DELAY=3
 
-DOWNLOAD_DELAY=1
+DOWNLOAD_DELAY=2
 
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN=16

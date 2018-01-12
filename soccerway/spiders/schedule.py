@@ -22,6 +22,16 @@ class ScheduleSpider(Spider):
             request = Request(url=u, callback=self.parse_index)
             request.meta['proxy'] = 'http://127.0.0.1:8118'
             yield request
+
+        extra_urls = [
+            #'http://www.soccerway.mobi/?sport=soccer&page=home&localization_id=www',
+            'http://www.soccerway.mobi/?sport=soccer&page=competition&id=695&localization_id=www']
+
+        for u in extra_urls:
+            request = Request(url=u, callback=self.parse_competition)
+            request.meta['proxy'] = 'http://127.0.0.1:8118'
+            yield request
+
         """
         start_url = 'http://www.soccerway.mobi/?sport=soccer&page=competition&id={}&localization_id=www'
         for i in competitions_id_list:

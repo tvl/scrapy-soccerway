@@ -18,7 +18,7 @@ class TeamsSpider(Spider):
     }
     def start_requests(self):
         start_url = 'http://www.soccerway.mobi/?sport=soccer&page=team&id={}&localization_id=www'
-        for i in range(66, 38737): # 38736 on 12.04.2017
+        for i in range(66, 41963): # 38736 on 12.04.2017, 41962 on 12.01.2018
             request = Request(url=start_url.format(str(i)), callback=self.parse)
             request.meta['proxy'] = 'http://127.0.0.1:8118'
             yield request

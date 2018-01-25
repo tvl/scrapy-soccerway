@@ -25,7 +25,8 @@ class ScheduleSpider(Spider):
 
         extra_urls = [
             #'http://www.soccerway.mobi/?sport=soccer&page=home&localization_id=www',
-            'http://www.soccerway.mobi/?sport=soccer&page=competition&id=695&localization_id=www']
+            #'http://www.soccerway.mobi/?sport=soccer&page=competition&id=695&localization_id=www'
+            ]
 
         for u in extra_urls:
             request = Request(url=u, callback=self.parse_competition)

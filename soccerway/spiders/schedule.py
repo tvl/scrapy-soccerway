@@ -25,7 +25,15 @@ class ScheduleSpider(Spider):
 
         extra_urls = [
             #'http://www.soccerway.mobi/?sport=soccer&page=home&localization_id=www',
-            #'http://www.soccerway.mobi/?sport=soccer&page=competition&id=695&localization_id=www'
+            #'http://www.soccerway.mobi/?sport=soccer&page=competition&id=72&localization_id=www',
+            #'http://www.soccerway.mobi/?sport=soccer&page=group&id=8870&localization_id=www',
+            #'http://www.soccerway.mobi/?sport=soccer&page=group&id=8871&localization_id=www',
+            #'http://www.soccerway.mobi/?sport=soccer&page=group&id=8872&localization_id=www',
+            #'http://www.soccerway.mobi/?sport=soccer&page=group&id=8873&localization_id=www',
+            #'http://www.soccerway.mobi/?sport=soccer&page=group&id=8874&localization_id=www',
+            #'http://www.soccerway.mobi/?sport=soccer&page=group&id=8875&localization_id=www',
+            #'http://www.soccerway.mobi/?sport=soccer&page=group&id=8876&localization_id=www',
+            #'http://www.soccerway.mobi/?sport=soccer&page=group&id=8877&localization_id=www'
             ]
 
         for u in extra_urls:
@@ -79,13 +87,15 @@ class ScheduleSpider(Spider):
             request.meta['proxy'] = 'http://127.0.0.1:8118'
             yield request
         groups = response.xpath('//select[@name="group_id"]/option/@value').extract()
-        for g in groups:
-            request = Request(url=start_url+g, callback=self.parse_group)
-            request.meta['proxy'] = 'http://127.0.0.1:8118'
-            yield request
-        competition_id = int(parse_qs(response.xpath('//div[@class="clearfix subnav level-1"]//li//a[2]/@href').extract_first())['id'][0])
-        if competition_id in [308, 327, 366, 570]:
-            rounds = response.xpath('//select[@name="round_id"]/option/@value').extract()
+        if groups:
+            for g in groups:
+                request = Request(url=start_url+g, callback=self.parse_group)
+                request.meta['proxy'] = 'http://127.0.0.1:8118'
+                yield request
+            competition_id = int(parse_qs(response.xpath('//div[@class="clearfix subnav level-1"]//li//a[2]/@href').extract_first())['id'][0])
+        #if competition_id in [267, 308, 327, 366, 570, 1661]:
+        rounds = response.xpath('//select[@name="round_id"]/option/@value').extract()
+        if rounds:
             for r in rounds:
                 request = Request(url=start_url+r, callback=self.parse_round)
                 request.meta['proxy'] = 'http://127.0.0.1:8118'
